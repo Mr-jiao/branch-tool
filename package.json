@@ -1,6 +1,6 @@
 {
-  "name": "branch-tool",
-  "displayName": "branch tool",
+  "name": "heye-branch-tool",
+  "displayName": "heye branch tool",
   "description": " a branch manage tool",
   "version": "0.0.1",
   "publisher": "heye-branch-tool",
