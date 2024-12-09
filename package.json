@@ -3,7 +3,7 @@
   "displayName": "branch tool",
   "description": " a branch manage tool",
   "version": "0.0.1",
-  "publisher": "nepro",
+  "publisher": "heye-branch-tool",
   "icon": "./toolLogo.png",
   "engines": {
     "vscode": "^1.95.0"
