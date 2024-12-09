@@ -50,7 +50,6 @@ const getRandomString = () => {
 const handleCreate = async (vscode: any) => {
     // 获取工作区路径
     const filePath = vscode.workspace.workspaceFolders[0].uri.path
-    // console.log('filePath', filePath)
 
     const git = simpleGit(filePath, {
         binary: 'git',
@@ -86,26 +85,23 @@ const handleCreate = async (vscode: any) => {
     if (currentBranch !== 'master') {
         try {
             await git.checkout('master')
-        } catch (ex) {
-            console.log('ex', typeof ex, ex)
-            vscode.window.showInformationMessage('切换到master失败')
+        } catch (ex:any) {
+            vscode.window.showInformationMessage(`切换到master失败:${ex.message}`)
             return
         }
     }
 
     try {
         await git.pull()
-    } catch (ex) {
-        console.log(ex)
-        vscode.window.showInformationMessage('拉取master分支失败')
+    } catch (ex:any) {
+        vscode.window.showInformationMessage(`拉取master分支失败:${ex.message}`)
         return
     }
 
     try {
         await git.checkoutLocalBranch(creatingBranchName)
-    } catch (ex) {
-        console.log(ex)
-        vscode.window.showInformationMessage('创建分支失败')
+    } catch (ex:any) {
+        vscode.window.showInformationMessage(`创建分支失败:${ex.message}`)
         return
     }
 
