@@ -18,6 +18,10 @@
       {
         "command": "branch-tool.createBranch",
         "title": "Create Branch"
+      },
+      {
+        "command": "branch-tool.mergeToTest",
+        "title": "Merge To Test"
       }
     ]
   },

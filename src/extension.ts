@@ -1,12 +1,18 @@
 import * as vscode from 'vscode'
 const handleCreate = require('./handleCreate')
+const handleMerge = require('./handleMerge')
 
 export function activate(context: vscode.ExtensionContext) {
-	const disposable = vscode.commands.registerCommand('branch-tool.createBranch', () => {
+	const createDisposable = vscode.commands.registerCommand('branch-tool.createBranch', () => {
 		handleCreate(vscode)
 	});
 
-	context.subscriptions.push(disposable);
+	const mergeDisposable = vscode.commands.registerCommand('branch-tool.mergeToTest', () => {
+		handleMerge(vscode)
+	});
+
+	context.subscriptions.push(createDisposable)
+	context.subscriptions.push(mergeDisposable)
 }
 
 // This method is called when your extension is deactivated
