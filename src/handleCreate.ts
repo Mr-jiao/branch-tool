@@ -55,28 +55,39 @@ const handleCreate = async (vscode: any) => {
     const git = simpleGit(filePath, {
         binary: 'git',
     })
+    let creatingBranchName = '' // 要创建的分支名
 
     const res: BranchItem = await vscode.window.showQuickPick(CREATE_BRANCH_OPTIONS, {
         placeHolder: '请选择要创建的分支类型',
     })
 
-    const inputName = await vscode.window.showInputBox({
-        placeHolder: '请输入分支名称',
-    })
+    const branchType = res.value
+    if (branchType === 'release') {
+        const versionNo = await vscode.window.showInputBox({
+            placeHolder: '请输入版本号, 如: 1.0.0',
+        })
+        const inputDate = await vscode.window.showInputBox({
+            placeHolder: '请输入版本日期, 如: yyyymmdd',
+        })
+        creatingBranchName = `${branchType}/v${versionNo}/${inputDate}/${getRandomString()}`
+    }
+
+    if (branchType !== 'release') {
+        const inputName = await vscode.window.showInputBox({
+            placeHolder: '请输入分支名称',
+        })
+        creatingBranchName = `${branchType}/${inputName}/${getDate()}/${getRandomString()}`
+    }
 
     const localBranch = await git.branchLocal()
-    console.log('localBranch', localBranch)
-
-    const creatingBranchName = `${res.value}/${inputName}/${getDate()}/${getRandomString()}`
-    console.log('creatingBranchName', creatingBranchName)
 
     const currentBranch = localBranch.current
-    console.log('currentBranch', currentBranch)
+
     if (currentBranch !== 'master') {
         try {
             await git.checkout('master')
         } catch (ex) {
-            console.log(ex)
+            console.log('ex', typeof ex, ex)
             vscode.window.showInformationMessage('切换到master失败')
             return
         }
