@@ -3,11 +3,11 @@ const handleCreate = require('./handleCreate')
 const handleMerge = require('./handleMerge')
 
 export function activate(context: vscode.ExtensionContext) {
-	const createDisposable = vscode.commands.registerCommand('branch-tool.createBranch', () => {
+	const createDisposable = vscode.commands.registerCommand('heye-branch-tool.createBranch', () => {
 		handleCreate(vscode)
 	});
 
-	const mergeDisposable = vscode.commands.registerCommand('branch-tool.mergeToTest', () => {
+	const mergeDisposable = vscode.commands.registerCommand('heye-branch-tool.mergeToTest', () => {
 		handleMerge(vscode)
 	});
 

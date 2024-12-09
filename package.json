@@ -16,11 +16,11 @@
   "contributes": {
     "commands": [
       {
-        "command": "branch-tool.createBranch",
+        "command": "heye-branch-tool.createBranch",
         "title": "Create Branch"
       },
       {
-        "command": "branch-tool.mergeToTest",
+        "command": "heye-branch-tool.mergeToTest",
         "title": "Merge To Test"
       }
     ]

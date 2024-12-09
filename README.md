@@ -1,3 +1,3 @@
-# branch-tool
+# heye-branch-tool
 
 a tool for managing branches
