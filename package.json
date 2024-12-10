@@ -2,7 +2,7 @@
   "name": "heye-branch-tool",
   "displayName": "heye branch tool",
   "description": " a branch manage tool",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "heye-branch-tool",
   "icon": "./toolLogo.png",
   "engines": {
