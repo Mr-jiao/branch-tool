@@ -54,6 +54,20 @@ const handleCreate = async (vscode: any) => {
     const git = simpleGit(filePath, {
         binary: 'git',
     })
+
+    const gitInfo = await git.version()
+    if (!gitInfo.installed) {
+        vscode.window.showInformationMessage('未安装git')
+        return
+    }
+
+    try {
+        await git.status()
+    } catch (ex:any) {
+        vscode.window.showInformationMessage(`当前路径不是git仓库:${ex.message}`)
+        return
+    }
+
     let creatingBranchName = '' // 要创建的分支名
 
     const res: BranchItem = await vscode.window.showQuickPick(CREATE_BRANCH_OPTIONS, {
