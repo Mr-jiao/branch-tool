@@ -1,6 +1,6 @@
 const { simpleGit } = require('simple-git')
 
-const handleMerge = async (vscode: any) => {
+const handleMergeToTest = async (vscode: any) => {
     // 获取工作区路径
     const filePath = vscode.workspace.workspaceFolders[0].uri.path
 
@@ -45,4 +45,4 @@ const handleMerge = async (vscode: any) => {
     await git.checkout(currentBranch)
 }
 
-module.exports = handleMerge
+module.exports = handleMergeToTest
