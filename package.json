@@ -26,6 +26,10 @@
       {
         "command": "heye-branch-tool.mergeMaster",
         "title": "Merge Master"
+      },
+      {
+        "command": "heye-branch-tool.delBranch",
+        "title": "Delete Branch"
       }
     ]
   },
