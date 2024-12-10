@@ -40,14 +40,14 @@ const handleMergeToTest = async (vscode: any) => {
         const mergeResult = await git.merge([mergingBranchName, '--no-ff'])
 
         if (mergeResult && mergeResult.result === 'success') {
-            vscode.window.showInformationMessage(`合并分支成功`)
+            vscode.window.showInformationMessage(`${mergingBranchName}合并到test分支成功`)
         }
     } catch (ex: any) {
         vscode.window.showInformationMessage(`合并分支失败:${ex.message}`)
         return
     }
 
-    await git.checkout(currentBranch)
+    // await git.checkout(currentBranch)
 }
 
 module.exports = handleMergeToTest
