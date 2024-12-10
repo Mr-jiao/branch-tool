@@ -1,5 +1,6 @@
 const { simpleGit } = require('simple-git')
 const { v4: uuidv4 } = require('uuid')
+const { checkGit } = require('./utils/check')
 
 interface BranchItem {
     label: string,
@@ -50,26 +51,16 @@ const getRandomString = () => {
 const handleCreate = async (vscode: any) => {
     // 获取工作区路径
     const filePath = vscode.workspace.workspaceFolders[0].uri.path
-
     const git = simpleGit(filePath, {
         binary: 'git',
     })
 
-    const gitInfo = await git.version()
-    if (!gitInfo.installed) {
-        vscode.window.showInformationMessage('未安装git')
-        return
-    }
-
-    try {
-        await git.status()
-    } catch (ex:any) {
-        vscode.window.showInformationMessage(`当前路径不是git仓库:${ex.message}`)
+    const isPass = await checkGit(git, vscode)
+    if (!isPass) {
         return
     }
 
     let creatingBranchName = '' // 要创建的分支名
-
     const res: BranchItem = await vscode.window.showQuickPick(CREATE_BRANCH_OPTIONS, {
         placeHolder: '请选择要创建的分支类型',
     })

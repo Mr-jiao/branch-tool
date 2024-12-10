@@ -22,6 +22,10 @@
       {
         "command": "heye-branch-tool.mergeToTest",
         "title": "Merge To Test"
+      },
+      {
+        "command": "heye-branch-tool.mergeMaster",
+        "title": "Merge Master"
       }
     ]
   },

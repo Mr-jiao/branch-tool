@@ -1,12 +1,17 @@
 const { simpleGit } = require('simple-git')
+const { checkGit } = require('./utils/check')
 
 const handleMergeToTest = async (vscode: any) => {
     // 获取工作区路径
     const filePath = vscode.workspace.workspaceFolders[0].uri.path
-
     const git = simpleGit(filePath, {
         binary: 'git',
     })
+
+    const isPass = await checkGit(git, vscode)
+    if (!isPass) {
+        return
+    }
 
     const localBranch = await git.branchLocal()
     const currentBranch = localBranch.current
