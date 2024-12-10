@@ -6,7 +6,7 @@
   "publisher": "heye-branch-tool",
   "icon": "./toolLogo.png",
   "engines": {
-    "vscode": "^1.90.0"
+    "vscode": "^1.95.0"
   },
   "categories": [
     "Other"
