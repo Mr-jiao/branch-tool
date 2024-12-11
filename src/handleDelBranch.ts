@@ -66,6 +66,10 @@ const handleDelBranch = async (vscode: any) => {
         canPickMany: true,
     })
 
+    if (!deletingBranches || deletingBranches.length === 0) {
+        return
+    }
+
     for (let i = 0; i < deletingBranches.length; i++) {
         const branchName = deletingBranches[i].label
         if (branchName === currentBranch) {
