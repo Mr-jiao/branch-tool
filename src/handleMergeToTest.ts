@@ -47,7 +47,14 @@ const handleMergeToTest = async (vscode: any) => {
         return
     }
 
-    // await git.checkout(currentBranch)
+    try {
+        await git.push('origin', 'test')
+        vscode.window.showInformationMessage('推送test分支成功')
+    } catch (ex: any) {
+        vscode.window.showInformationMessage(`推送test分支失败:${ex.message}`)
+    }
+
+    await git.checkout(currentBranch)
 }
 
 module.exports = handleMergeToTest
