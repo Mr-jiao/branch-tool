@@ -2,6 +2,21 @@ const { simpleGit } = require('simple-git')
 const { checkGit } = require('./utils/check')
 import { QuickPickItem } from 'vscode'
 
+interface CustomBranchItem extends QuickPickItem {
+    value: Boolean;
+}
+
+const delBranchOptions: CustomBranchItem[] = [
+    {
+        label: '是',
+        value: true,
+    },
+    {
+        label: '否',
+        value: false,
+    },
+]
+
 
 const handleDelBranch = async (vscode: any) => {
     // 获取工作区路径
@@ -59,10 +74,19 @@ const handleDelBranch = async (vscode: any) => {
         }
     }
 
+    const isDelRemote = await vscode.window.showQuickPick(delBranchOptions, {
+        placeHolder: '请选择是否要删除对应的远端分支',
+    })
+
     const deleteBranches = deletingBranches.map((branch: QuickPickItem) => branch.label)
 
     try {
         await git.deleteLocalBranches(deleteBranches, true)
+        if (isDelRemote.value) {
+            for (let i = 0; i < deleteBranches.length; i++) {
+                await git.push('origin', deleteBranches[i], ['--delete'])
+            }
+        }
         vscode.window.showInformationMessage('删除分支成功')
     } catch(ex:any) {
         vscode.window.showInformationMessage(`删除分支失败:${ex.message}`)
