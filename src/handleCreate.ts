@@ -65,14 +65,24 @@ const handleCreate = async (vscode: any) => {
         placeHolder: '请选择要创建的分支类型',
     })
 
+    if (!res) {
+        return
+    }
+
     const branchType = res.value
     if (branchType === 'release') {
         const versionNo = await vscode.window.showInputBox({
             placeHolder: '请输入版本号, 如: 1.0.0',
         })
+        if (!versionNo) {
+            return
+        }
         const inputDate = await vscode.window.showInputBox({
             placeHolder: '请输入版本日期, 如: yyyymmdd',
         })
+        if (!inputDate) {
+            return
+        }
         creatingBranchName = `${branchType}/v${versionNo}/${inputDate}/${getRandomString()}`
     }
 
@@ -80,6 +90,9 @@ const handleCreate = async (vscode: any) => {
         const inputName = await vscode.window.showInputBox({
             placeHolder: '请输入分支名称',
         })
+        if (!inputName) {
+            return
+        }
         creatingBranchName = `${branchType}/${inputName}/${getDate()}/${getRandomString()}`
     }
 

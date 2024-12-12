@@ -16,9 +16,13 @@ const handleMergeToTest = async (vscode: any) => {
     const localBranch = await git.branchLocal()
     const currentBranch = localBranch.current
 
-    const mergingBranchName: string[] = await vscode.window.showQuickPick(localBranch.all, {
+    const mergingBranchName: string = await vscode.window.showQuickPick(localBranch.all, {
         placeHolder: '请选择要合并的分支',
     })
+
+    if(!mergingBranchName) {
+        return
+    }
 
     if (currentBranch !== 'test') {
         try {

@@ -86,7 +86,7 @@ const handleDelBranch = async (vscode: any) => {
 
     try {
         await git.deleteLocalBranches(deleteBranches, true)
-        if (isDelRemote.value) {
+        if (isDelRemote && isDelRemote.value) {
             const remoteBranchResult = await git.branch(['-r'])
             const remoteBranches = remoteBranchResult.all.map((branchName: string) => {
                 return branchName.replace('origin/', '')

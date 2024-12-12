@@ -16,9 +16,13 @@ const handleMergeMaster = async (vscode: any) => {
     const localBranch = await git.branchLocal()
     const currentBranch = localBranch.current
 
-    const mergingBranchName: string[] = await vscode.window.showQuickPick(localBranch.all, {
+    const mergingBranchName: string = await vscode.window.showQuickPick(localBranch.all, {
         placeHolder: '请选择要反合master的分支',
     })
+
+    if (!mergingBranchName) {
+        return
+    }
 
     // 拉取 master 分支最新代码
     if (currentBranch !== 'master') {
