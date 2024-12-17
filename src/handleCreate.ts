@@ -2,12 +2,17 @@ const { simpleGit } = require('simple-git')
 const { v4: uuidv4 } = require('uuid')
 const { checkGit } = require('./utils/check')
 
-interface BranchItem {
+interface BranchTypeOption {
     label: string,
     value: string,
 }
 
-const CREATE_BRANCH_OPTIONS: BranchItem[] = [
+interface YesOrNoOptions {
+    label: string,
+    value: boolean,
+}
+
+const BRANCH_TYPE_OPTIONS: BranchTypeOption[] = [
     {
         label: '开发分支',
         value: 'feature'
@@ -31,6 +36,17 @@ const CREATE_BRANCH_OPTIONS: BranchItem[] = [
     {
         label: '重构分支',
         value: 'refactor',
+    },
+]
+
+const YES_OR_NO_OPTIONS: YesOrNoOptions[] = [
+    {
+        label: '是',
+        value: true,
+    },
+    {
+        label: '否',
+        value: false,
     },
 ]
 
@@ -61,7 +77,7 @@ const handleCreate = async (vscode: any) => {
     }
 
     let creatingBranchName = '' // 要创建的分支名
-    const res: BranchItem = await vscode.window.showQuickPick(CREATE_BRANCH_OPTIONS, {
+    const res: BranchTypeOption = await vscode.window.showQuickPick(BRANCH_TYPE_OPTIONS, {
         placeHolder: '请选择要创建的分支类型',
     })
 
@@ -70,6 +86,43 @@ const handleCreate = async (vscode: any) => {
     }
 
     const branchType = res.value
+    let isFromMaster = true // 是否基于 master 分支创建，版本分支和热修复分支强制基于 master 分支创建
+    let baseBranch = 'master' // 基准分支
+
+    if (['feature', 'bugfix', 'perf', 'refactor'].includes(branchType)) {
+        const result = await vscode.window.showQuickPick(YES_OR_NO_OPTIONS, {
+            placeHolder: '请选择是否基于 master 分支创建',
+        })
+        if (!result) {
+            return
+        }
+        isFromMaster = result.value
+
+        if (!isFromMaster) {
+            try {
+                vscode.window.setStatusBarMessage('同步远程仓库中...')
+                await git.fetch(['-p'])
+                vscode.window.setStatusBarMessage('')
+            } catch (ex:any) {
+                vscode.window.showInformationMessage(`同步远程仓库失败:${ex.message}`)
+                vscode.window.setStatusBarMessage('')
+                return
+            }
+
+            const remoteBranchResult = await git.branch(['-r'])
+            const remoteBranches: string[] = remoteBranchResult.all.map((branchName: string) => {
+                return branchName
+            })
+            baseBranch = await vscode.window.showQuickPick(remoteBranches, {
+                placeHolder: '请选择要从哪个分支创建',
+            })
+            if (!baseBranch) {
+                return
+            }
+            baseBranch = baseBranch.replace('origin/', '')
+        }
+    }
+
     if (branchType === 'release') {
         const versionNo = await vscode.window.showInputBox({
             placeHolder: '请输入版本号, 如: 1.0.0',
@@ -100,19 +153,19 @@ const handleCreate = async (vscode: any) => {
 
     const currentBranch = localBranch.current
 
-    if (currentBranch !== 'master') {
+    if (currentBranch !== baseBranch) {
         try {
-            await git.checkout('master')
+            await git.checkout(baseBranch)
         } catch (ex:any) {
-            vscode.window.showInformationMessage(`切换到master失败:${ex.message}`)
+            vscode.window.showInformationMessage(`切换到${baseBranch}失败:${ex.message}`)
             return
         }
     }
 
     try {
-        await git.pull()
+        await git.pull(['origin', baseBranch])
     } catch (ex:any) {
-        vscode.window.showInformationMessage(`拉取master分支失败:${ex.message}`)
+        vscode.window.showInformationMessage(`拉取${baseBranch}分支失败:${ex.message}`)
         return
     }
 
