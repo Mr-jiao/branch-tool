@@ -10,6 +10,8 @@ a tool for managing branches
 1. 支持开发分支合并到test分支，防止出现反合test分支的情况（合并到test后，会自动同步远端）
 2. 支持开发分支反合 master 分支
 
+- 分支名复制到剪切板
+
 - 分支删除
 
 ## Usage
@@ -35,3 +37,7 @@ a tool for managing branches
 - 删除分支
 1. 按住 `command+shift+p` 打开指令面板
 2. 输入 `Delete Branch` 选择要删除的分支
+
+- 分支名复制到剪切板
+1. 按住 `command+shift+p` 打开指令面板
+2. 输入 `Copy Branch` 选择要复制的分支
