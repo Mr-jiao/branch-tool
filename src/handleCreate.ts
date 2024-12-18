@@ -1,6 +1,5 @@
-const { simpleGit } = require('simple-git')
+const initGit = require('./utils/initGit')
 const { v4: uuidv4 } = require('uuid')
-const { checkGit } = require('./utils/check')
 
 interface BranchTypeOption {
     label: string,
@@ -65,14 +64,8 @@ const getRandomString = () => {
 }
 
 const handleCreate = async (vscode: any) => {
-    // 获取工作区路径
-    const filePath = vscode.workspace.workspaceFolders[0].uri.path
-    const git = simpleGit(filePath, {
-        binary: 'git',
-    })
-
-    const isPass = await checkGit(git, vscode)
-    if (!isPass) {
+    const git = await initGit(vscode)
+    if (!git) {
         return
     }
 

@@ -1,15 +1,8 @@
-const { simpleGit } = require('simple-git')
-const { checkGit } = require('./utils/check')
+const initGit = require('./utils/initGit')
 
 const handleMergeMaster = async (vscode: any) => {
-    // 获取工作区路径
-    const filePath = vscode.workspace.workspaceFolders[0].uri.path
-    const git = simpleGit(filePath, {
-        binary: 'git',
-    })
-
-    const isPass = await checkGit(git, vscode)
-    if (!isPass) {
+    const git = await initGit(vscode)
+    if (!git) {
         return
     }
 
