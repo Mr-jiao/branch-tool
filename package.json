@@ -30,6 +30,10 @@
       {
         "command": "heye-branch-tool.delBranch",
         "title": "Delete Branch"
+      },
+      {
+        "command": "heye-branch-tool.copyBranch",
+        "title": "Copy Branch"
       }
     ]
   },
@@ -61,6 +65,7 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
+    "copy-paste": "^1.5.3",
     "simple-git": "^3.27.0",
     "uuid": "^11.0.3"
   }
