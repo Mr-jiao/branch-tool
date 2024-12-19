@@ -1,5 +1,6 @@
 const initGit = require('./utils/initGit')
 const { v4: uuidv4 } = require('uuid')
+const { showLoading, hideLoading } = require('./utils/ui')
 
 interface BranchTypeOption {
     label: string,
@@ -93,12 +94,12 @@ const handleCreate = async (vscode: any) => {
 
         if (!isFromMaster) {
             try {
-                vscode.window.setStatusBarMessage('同步远程仓库中...')
+                showLoading('同步远程仓库中...')
                 await git.fetch(['-p'])
-                vscode.window.setStatusBarMessage('')
+                hideLoading()
             } catch (ex:any) {
                 vscode.window.showInformationMessage(`同步远程仓库失败:${ex.message}`)
-                vscode.window.setStatusBarMessage('')
+                hideLoading()
                 return
             }
 
@@ -142,7 +143,7 @@ const handleCreate = async (vscode: any) => {
         creatingBranchName = `${branchType}/${inputName}/${getDate()}/${getRandomString()}`
     }
 
-    vscode.window.setStatusBarMessage('分支创建中...')
+    showLoading('分支创建中...')
 
     const localBranch = await git.branchLocal()
     const currentBranch = localBranch.current
@@ -151,7 +152,7 @@ const handleCreate = async (vscode: any) => {
         try {
             await git.checkout(baseBranch)
         } catch (ex:any) {
-            vscode.window.setStatusBarMessage('')
+            hideLoading()
             vscode.window.showInformationMessage(`切换到${baseBranch}失败:${ex.message}`)
             return
         }
@@ -160,7 +161,7 @@ const handleCreate = async (vscode: any) => {
     try {
         await git.pull(['origin', baseBranch])
     } catch (ex:any) {
-        vscode.window.setStatusBarMessage('')
+        hideLoading()
         vscode.window.showInformationMessage(`拉取${baseBranch}分支失败:${ex.message}`)
         return
     }
@@ -171,7 +172,7 @@ const handleCreate = async (vscode: any) => {
         vscode.window.showInformationMessage(`创建分支失败:${ex.message}`)
         return
     } finally {
-        vscode.window.setStatusBarMessage('')
+        hideLoading()
     }
 
     vscode.window.showInformationMessage('创建分支成功')

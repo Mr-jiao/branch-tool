@@ -1,4 +1,5 @@
 const initGit = require('./utils/initGit')
+const { showLoading, hideLoading } = require('./utils/ui')
 import { QuickPickItem } from 'vscode'
 
 interface CustomBranchItem extends QuickPickItem {
@@ -24,12 +25,12 @@ const handleDelBranch = async (vscode: any) => {
     }
 
     try {
-        vscode.window.setStatusBarMessage('同步远程仓库中...')
+        showLoading('同步远程仓库中...')
         await git.fetch(['-p'])
-        vscode.window.setStatusBarMessage('')
+        hideLoading()
     } catch (ex:any) {
         vscode.window.showInformationMessage(`同步远程仓库失败:${ex.message}`)
-        vscode.window.setStatusBarMessage('')
+        hideLoading()
         return
     }
 
@@ -78,7 +79,7 @@ const handleDelBranch = async (vscode: any) => {
     const deleteBranches = deletingBranches.map((branch: QuickPickItem) => branch.label)
 
     try {
-        vscode.window.setStatusBarMessage('分支删除中...')
+        showLoading('分支删除中...')
 
         await git.deleteLocalBranches(deleteBranches, true)
         if (isDelRemote && isDelRemote.value) {
@@ -97,7 +98,7 @@ const handleDelBranch = async (vscode: any) => {
     } catch(ex:any) {
         vscode.window.showInformationMessage(`删除分支失败:${ex.message}`)
     } finally {
-        vscode.window.setStatusBarMessage('')
+        hideLoading()
     }
 }
 

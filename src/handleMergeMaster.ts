@@ -1,4 +1,5 @@
 const initGit = require('./utils/initGit')
+const { showLoading, hideLoading } = require('./utils/ui')
 
 const handleMergeMaster = async (vscode: any) => {
     const git = await initGit(vscode)
@@ -17,14 +18,14 @@ const handleMergeMaster = async (vscode: any) => {
         return
     }
 
-    vscode.window.setStatusBarMessage('合并中...')
+    showLoading('合并中...')
 
     // 拉取 master 分支最新代码
     if (currentBranch !== 'master') {
         try {
             await git.checkout('master')
         } catch (ex:any) {
-            vscode.window.setStatusBarMessage('')
+            hideLoading()
             vscode.window.showInformationMessage(`切换到master失败:${ex.message}`)
             return
         }
@@ -33,7 +34,7 @@ const handleMergeMaster = async (vscode: any) => {
     try {
         await git.pull()
     } catch (ex:any) {
-        vscode.window.setStatusBarMessage('')
+        hideLoading()
         vscode.window.showInformationMessage(`拉取master分支失败:${ex.message}`)
         return
     }
@@ -41,7 +42,7 @@ const handleMergeMaster = async (vscode: any) => {
     try {
         await git.checkout(mergingBranchName)
     } catch (ex:any) {
-        vscode.window.setStatusBarMessage('')
+        hideLoading()
         vscode.window.showInformationMessage(`切换到${mergingBranchName}分支失败:${ex.message}`)
         return
     }
@@ -50,11 +51,11 @@ const handleMergeMaster = async (vscode: any) => {
         const mergeResult = await git.merge(['master', '--no-ff'])
 
         if (mergeResult && mergeResult.result === 'success') {
-            vscode.window.setStatusBarMessage('')
+            hideLoading()
             vscode.window.showInformationMessage(`${mergingBranchName} 反合 master 分支成功`)
         }
     } catch (ex: any) {
-        vscode.window.setStatusBarMessage('')
+        hideLoading()
         vscode.window.showInformationMessage(`反合 master 分支失败:${ex.message}`)
         return
     }
