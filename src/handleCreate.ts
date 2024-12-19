@@ -142,14 +142,16 @@ const handleCreate = async (vscode: any) => {
         creatingBranchName = `${branchType}/${inputName}/${getDate()}/${getRandomString()}`
     }
 
-    const localBranch = await git.branchLocal()
+    vscode.window.setStatusBarMessage('分支创建中...')
 
+    const localBranch = await git.branchLocal()
     const currentBranch = localBranch.current
 
     if (currentBranch !== baseBranch) {
         try {
             await git.checkout(baseBranch)
         } catch (ex:any) {
+            vscode.window.setStatusBarMessage('')
             vscode.window.showInformationMessage(`切换到${baseBranch}失败:${ex.message}`)
             return
         }
@@ -158,6 +160,7 @@ const handleCreate = async (vscode: any) => {
     try {
         await git.pull(['origin', baseBranch])
     } catch (ex:any) {
+        vscode.window.setStatusBarMessage('')
         vscode.window.showInformationMessage(`拉取${baseBranch}分支失败:${ex.message}`)
         return
     }
@@ -167,6 +170,8 @@ const handleCreate = async (vscode: any) => {
     } catch (ex:any) {
         vscode.window.showInformationMessage(`创建分支失败:${ex.message}`)
         return
+    } finally {
+        vscode.window.setStatusBarMessage('')
     }
 
     vscode.window.showInformationMessage('创建分支成功')

@@ -19,7 +19,7 @@ const handleCopyBranch = async (vscode: any) => {
 
     try {
         await ncp.copy(branchName)
-        vscode.window.showInformationMessage('复制分支成功')
+        vscode.window.showInformationMessage('分支名已复制到剪切板')
     } catch(ex: any) {
         vscode.window.showInformationMessage(`复制分支失败:${ex.message}`)
     }

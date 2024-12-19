@@ -78,13 +78,15 @@ const handleDelBranch = async (vscode: any) => {
     const deleteBranches = deletingBranches.map((branch: QuickPickItem) => branch.label)
 
     try {
+        vscode.window.setStatusBarMessage('分支删除中...')
+
         await git.deleteLocalBranches(deleteBranches, true)
         if (isDelRemote && isDelRemote.value) {
             const remoteBranchResult = await git.branch(['-r'])
             const remoteBranches = remoteBranchResult.all.map((branchName: string) => {
                 return branchName.replace('origin/', '')
             })
-            console.log('remoteBranches', remoteBranches)
+
             for (let i = 0; i < deleteBranches.length; i++) {
                 if (remoteBranches.includes(deleteBranches[i])) {
                     await git.push('origin', deleteBranches[i], ['--delete'])
@@ -94,6 +96,8 @@ const handleDelBranch = async (vscode: any) => {
         vscode.window.showInformationMessage('删除分支成功')
     } catch(ex:any) {
         vscode.window.showInformationMessage(`删除分支失败:${ex.message}`)
+    } finally {
+        vscode.window.setStatusBarMessage('')
     }
 }
 

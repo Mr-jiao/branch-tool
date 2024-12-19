@@ -17,10 +17,13 @@ const handleMergeToTest = async (vscode: any) => {
         return
     }
 
+    vscode.window.setStatusBarMessage('合并中...')
+
     if (currentBranch !== 'test') {
         try {
             await git.checkout('test')
         } catch (ex: any) {
+            vscode.window.setStatusBarMessage('')
             vscode.window.showInformationMessage(`切换到test分支失败:${ex.message}`)
             return
         }
@@ -29,6 +32,7 @@ const handleMergeToTest = async (vscode: any) => {
     try {
         await git.pull()
     } catch (ex: any) {
+        vscode.window.setStatusBarMessage('')
         vscode.window.showInformationMessage(`拉取test分支失败:${ex.message}`)
         return
     }
@@ -37,17 +41,22 @@ const handleMergeToTest = async (vscode: any) => {
         const mergeResult = await git.merge([mergingBranchName, '--no-ff'])
 
         if (mergeResult && mergeResult.result === 'success') {
+            vscode.window.setStatusBarMessage('')
             vscode.window.showInformationMessage(`${mergingBranchName}合并到test分支成功`)
         }
     } catch (ex: any) {
+        vscode.window.setStatusBarMessage('')
         vscode.window.showInformationMessage(`合并分支失败:${ex.message}`)
         return
     }
 
     try {
+        vscode.window.setStatusBarMessage('推送中...')
         await git.push('origin', 'test')
+        vscode.window.setStatusBarMessage('')
         vscode.window.showInformationMessage('推送test分支成功')
     } catch (ex: any) {
+        vscode.window.setStatusBarMessage('')
         vscode.window.showInformationMessage(`推送test分支失败:${ex.message}`)
     }
 
