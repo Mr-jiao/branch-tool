@@ -2,7 +2,7 @@
   "name": "heye-branch-tool",
   "displayName": "heye branch tool",
   "description": " a branch manage tool",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "publisher": "heye-branch-tool",
   "icon": "./toolLogo.png",
   "engines": {
@@ -11,7 +11,13 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:heye-branch-tool.createBranch",
+    "onCommand:heye-branch-tool.mergeToTest",
+    "onCommand:heye-branch-tool.mergeMaster",
+    "onCommand:heye-branch-tool.delBranch",
+    "onCommand:heye-branch-tool.copyBranch"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [

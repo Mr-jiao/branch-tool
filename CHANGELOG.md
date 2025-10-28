@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## [0.0.9] - 2025-10-28
+### Added
+
+### Fixed
+windows系统兼容
+
+### Changed
+
+### Removed
+
+
 ## [0.0.8] - 2024-12-19
 ### Added
 - 操作提示
